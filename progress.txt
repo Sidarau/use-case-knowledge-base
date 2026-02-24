@@ -1,0 +1,45 @@
+# Progress Log
+Run: 8e85074b-d411-4d6d-90d2-21fc164a539b
+Task: Build a personal knowledge base CLI app with RAG ingestion and retrieval
+Started: 2026-02-13T07:43:00Z
+
+## Codebase Patterns
+- ES modules ("type": "module" in package.json)
+- Node.js built-in test runner for testing (`node --test`)
+- Test files in `test/` directory with `.test.js` suffix
+- Source files in `src/` directory
+
+---
+
+## 2026-02-13T07:43:00Z - US-001: Unit tests for URL normalization and source detection
+- Created `test/normalize.test.js` with 12 tests for `normalizeUrl()`
+- Created `test/detect.test.js` with 13 tests for `detectSourceType()`
+- Added `npm test` script to package.json
+- Files changed:
+  - test/normalize.test.js (new)
+  - test/detect.test.js (new)
+  - package.json (added test script)
+- **Learnings:**
+  - The project uses ES modules throughout
+  - `detectSourceType` returns 'text' for any falsy value (null, undefined, empty string)
+  - `normalizeUrl` handles URL normalization including: www removal, twitter→x.com, tracking param stripping, fragment removal, trailing slash removal
+
+---
+
+## 2026-02-13T07:47:00Z - US-002: Unit tests and robustness for content quality validation
+- Created `test/validate.test.js` with 28 tests for `validateContent()`
+- Tests cover:
+  - Length checks (min 20 chars global, min 500 for non-tweets)
+  - Prose ratio detection for articles (>= 15% paragraphs > 80 chars)
+  - Error signal detection (2+ signals triggers failure)
+  - Source type handling (tweet, article, pdf, video, text, other)
+  - Complex scenarios and edge cases
+- All 53 tests pass (including previous US-001 tests)
+- Files changed:
+  - test/validate.test.js (new, 240 lines)
+- **Learnings:**
+  - Tweets skip the 500-char minimum and prose checks, but still need 20+ chars
+  - Error signal detection requires exactly 2+ signals from the ERROR_SIGNALS list
+  - Prose ratio is calculated as % of paragraphs > 80 chars after joining consecutive lines
+
+---
